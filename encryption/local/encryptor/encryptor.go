@@ -38,7 +38,17 @@ func NewEncryptorWithDefault(defaultEncryption *Encryptor) *Encryptor {
 		Encryption: DefaultEncryption.Encryption,
 	}
 }
+var iv = []byte{34, 35, 35, 57, 68, 4, 35, 36, 7, 8, 35, 23, 35, 86, 35, 23}
 
+func encodeBase64(b []byte) string {
+	return base64.StdEncoding.EncodeToString(b)
+}
+
+func decodeBase64(s string) []byte {
+	data, err := base64.StdEncoding.DecodeString(s)
+	if err != nil { panic(err) }
+	return data
+}
 
 func (encryptor *Encryptor) Encrypt(key, text []byte) string {
 	block, err := aes.NewCipher(key)
@@ -52,13 +62,12 @@ func (encryptor *Encryptor) Encrypt(key, text []byte) string {
 	}
 	cfb := cipher.NewCFBEncrypter(block, iv)
 	cfb.XORKeyStream(ciphertext[aes.BlockSize:], text)
-	// return encoder.Base64ToInt(ciphertext)
-	return base64.NewEncoding(string(ciphertext)).
+	return encodeBase64(ciphertext)
 }
 
 
 func (encryptor *Encryptor) Decrypt(key []byte, b64 string) string {
-	text := ncoder.Base64ToInt(b64)
+	text := decodeBase64(b64)
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		panic(err)
