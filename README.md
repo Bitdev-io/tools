@@ -11,3 +11,6 @@ now supported encryption and decryption of local files for git host.
 Future Update Configuration
 
 - [ ] /configuration/local/configured
+
+#### Notes
+Changed org from Bitdev-io to bitdevio for easier import path
