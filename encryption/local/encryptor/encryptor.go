@@ -4,8 +4,12 @@ import (
 	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"io"
+
+
 )
 
 
@@ -43,17 +47,18 @@ func (encryptor *Encryptor) Encrypt(key, text []byte) string {
 	}
 	ciphertext := make([]byte, aes.BlockSize+len(text))
 	iv := ciphertext[:aes.BlockSize]
-	if _, err := io.ReadFull(crand.Reader, iv); err != nil {
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 		panic(err)
 	}
 	cfb := cipher.NewCFBEncrypter(block, iv)
 	cfb.XORKeyStream(ciphertext[aes.BlockSize:], text)
-	return encodeBase64(ciphertext)
+	// return encoder.Base64ToInt(ciphertext)
+	return base64.NewEncoding(string(ciphertext)).
 }
 
 
 func (encryptor *Encryptor) Decrypt(key []byte, b64 string) string {
-	text := encoder.Base64ToInt(b64)
+	text := ncoder.Base64ToInt(b64)
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		panic(err)
